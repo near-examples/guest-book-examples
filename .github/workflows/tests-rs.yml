@@ -14,4 +14,4 @@ jobs:
       - name: Install and test modules
         run: |
           cd ./contract-rs
-          ./test.sh
+          cargo test
