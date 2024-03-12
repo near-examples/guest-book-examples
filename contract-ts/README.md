@@ -32,48 +32,49 @@ get_messages({ fromIndex = 0, limit = 10 }: { fromIndex: number, limit: number }
 
 <br />
 
-## 1. Build and Deploy the Contract
-You can automatically compile and deploy the contract in the NEAR testnet by running:
+## 1. Build and Test the Contract
+You can automatically compile and test the contract by running:
 
 ```bash
-npm run deploy
-```
-
-Once finished, check the `neardev/dev-account` file to find the address in which the contract was deployed:
-
-```bash
-cat ./neardev/dev-account
-# e.g. dev-1659899566943-21539992274727
+npm run test
 ```
 
 <br />
 
-## 2. Retrieve the Stored Messages
+## 2. Create an Account and Deploy
+You can create a testnet account and deploy the contract by running:
+
+```bash
+near create-account <your-account.testnet> --useFaucet
+near deploy <your-account.testnet> build/release/hello_near.wasm
+```
+
+## 3. Retrieve the Stored Messages
 `get_messages` is a read-only method (`view` method) that returns a slice of the vector `messages`.
 
 `View` methods can be called for **free** by anyone, even people **without a NEAR account**!
 
 ```bash
-near view <dev-account> get_messages '{"from_index":0, "limit":10}'
+near view <your-account.testnet> get_messages '{"from_index":0, "limit":10}'
 ```
 
 <br />
 
-## 3. Add a Message
+## 4. Add a Message
 `add_message` adds a message to the vector of `messages` and marks it as premium if the user attached more than `0.1 NEAR`.
 
 `add_message` is a payable method for which can only be invoked using a NEAR account. The account needs to attach money and pay GAS for the transaction.
 
 ```bash
 # Use near-cli to donate 1 NEAR
-near call <dev-account> add_message '{"text": "a message"}' --amount 0.1 --accountId <account>
+near call <your-account.testnet> add_message '{"text": "a message"}' --amount 0.1 --accountId <your-account.testnet>
 ```
 
-**Tip:** If you would like to add a message using your own account, first login into NEAR using:
+**Tip:** If you would like to add a message another account, first login into NEAR using:
 
 ```bash
 # Use near-cli to login your NEAR account
 near login
 ```
 
-and then use the logged account to sign the transaction: `--accountId <your-account>`.
+and then use the logged account to sign the transaction: `--accountId <your-account.testnet>`.
