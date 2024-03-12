@@ -16,6 +16,19 @@ cargo near build
 cargo test
 ```
 
+## How to Deploy?
+
+To deploy manually, install [`cargo-near`](https://github.com/near/cargo-near) and run:
+
+```bash
+# Create a new account
+cargo near create-dev-account
+
+# Deploy the contract on it
+cargo near deploy <account-id>
+```
+
+
 ## How to Interact?
 
 _In this example we will be using [NEAR CLI](https://github.com/near/near-cli)
