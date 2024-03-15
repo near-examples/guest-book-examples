@@ -15,17 +15,17 @@ function App() {
   useEffect(() => {
     const initFunction = async () => {
       const isSignedIn = await wallet.startUp();
+      const messages = await getLast10Messages();
+      
       setIsSignedIn(isSignedIn);
-
-      await getLast10Messages()
+      setMessages(messages.reverse());
     }
     initFunction();
   }, []);
 
   const getLast10Messages = async () => {
     const total_messages = await wallet.viewMethod({ contractId: CONTRACT_NAME, method: "total_messages" });
-    const messages = await wallet.viewMethod({ contractId: CONTRACT_NAME, method: "get_messages", args: { from_index: String(total_messages - 10), limit: "10" } });
-    setMessages(messages);
+    return wallet.viewMethod({ contractId: CONTRACT_NAME, method: "get_messages", args: { from_index: String(total_messages - 10), limit: "10" } });
   }
 
   const onSubmit = async (e) => {
@@ -40,7 +40,8 @@ function App() {
     await wallet.callMethod({ contractId: CONTRACT_NAME, method: "add_message", args: { text: message.value }, deposit });
 
     // Get updated messages
-    await getLast10Messages();
+    const messages = await getLast10Messages();
+    setMessages(messages.reverse());
 
     message.value = '';
     donation.value = '0';
