@@ -6,29 +6,26 @@ import Messages from './components/Messages';
 import { utils } from 'near-api-js';
 
 const CONTRACT_NAME = "guestbook.near-examples.testnet"
-const wallet = new Wallet({ createAccessKeyFor: CONTRACT_NAME})
-
+const wallet = new Wallet({ createAccessKeyFor: CONTRACT_NAME })
 
 function App() {
   const [isSignedIn, setIsSignedIn] = useState(false);
   const [messages, setMessages] = useState([]);
-  useEffect(()=>{
-    const initFunction = async() =>{
-      setIsSignedIn( await wallet.startUp());
-      const messages = await wallet.viewMethod({ contractId: CONTRACT_NAME, method: "get_messages" })
-      setMessages(messages);
+
+  useEffect(() => {
+    const initFunction = async () => {
+      const isSignedIn = await wallet.startUp();
+      setIsSignedIn(isSignedIn);
+
+      await getLast10Messages()
     }
     initFunction();
-  },[]);
+  }, []);
 
-  const getMessages  = async() => {
-    const messages = await wallet.viewMethod({ contractId: CONTRACT_NAME, method: "get_messages" })
-    return messages
-  }
-
-  const addMessage = async (message, donation)=> {
-    const deposit = utils.format.parseNearAmount(donation);
-    return await wallet.callMethod({ contractId: CONTRACT_NAME, method: "add_message", args: { text: message }, deposit });
+  const getLast10Messages = async () => {
+    const total_messages = await wallet.viewMethod({ contractId: CONTRACT_NAME, method: "total_messages" });
+    const messages = await wallet.viewMethod({ contractId: CONTRACT_NAME, method: "get_messages", args: { from_index: String(total_messages - 10), limit: "10" } });
+    setMessages(messages);
   }
 
   const onSubmit = async (e) => {
@@ -38,16 +35,19 @@ function App() {
 
     fieldset.disabled = true;
 
-    await addMessage(message.value, donation.value)
-    const messages = await getMessages()
+    // Add message to the guest book
+    const deposit = utils.format.parseNearAmount(donation.value);
+    await wallet.callMethod({ contractId: CONTRACT_NAME, method: "add_message", args: { text: message.value }, deposit });
 
-    setMessages(messages);
+    // Get updated messages
+    await getLast10Messages();
+
     message.value = '';
     donation.value = '0';
     fieldset.disabled = false;
     message.focus();
   };
- 
+
   const signIn = () => { wallet.signIn() }
 
   const signOut = () => { wallet.signOut() }
@@ -57,25 +57,25 @@ function App() {
       <table>
         <tr>
           <td><h1>📖 NEAR Guest Book</h1></td>
-          <td>{ isSignedIn
-          ? <button onClick={signOut}>Log out</button>
-          : <button onClick={signIn}>Log in</button>
-        }</td>
+          <td>{isSignedIn
+            ? <button onClick={signOut}>Log out</button>
+            : <button onClick={signIn}>Log in</button>
+          }</td>
         </tr>
       </table>
 
       <hr />
-      { isSignedIn
+      {isSignedIn
         ? <Form onSubmit={onSubmit} currentAccountId={wallet.accountId} />
-        : <SignIn/>
+        : <SignIn />
       }
 
       <hr />
 
-      { !!messages.length && <Messages messages={messages}/> }
+      {!!messages.length && <Messages messages={messages} />}
 
     </main>
-    )
+  )
 }
 
 export default App
