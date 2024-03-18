@@ -3,14 +3,11 @@ import anyTest, { TestFn } from 'ava';
 import { setDefaultResultOrder } from 'dns'; setDefaultResultOrder('ipv4first'); // temp fix for node >v17
 
 // Global context
-let worker: Worker;
-let accounts: Record<string, NearAccount>;
+const test = anyTest as TestFn<{ worker: Worker, accounts: Record<string, NearAccount> }>;
 
-const test = anyTest as TestFn<{}>;
-
-test.before(async (t) => {
-  // Init the worker and start a Sandbox server
-  worker = await Worker.init();
+test.beforeEach(async (t) => {
+  // Create sandbox, accounts, deploy contracts, etc.
+  const worker = t.context.worker = await Worker.init();
 
   // deploy contract
   const root = worker.rootAccount;
@@ -27,18 +24,18 @@ test.before(async (t) => {
   await contract.deploy(process.argv[2]);
 
   // Save state for test runs, it is unique for each test
-  accounts = { root, contract, alice };
+  t.context.accounts = { root, contract, alice };
 });
 
-test.after.always(async (t) => {
+test.afterEach.always(async (t) => {
   // Stop Sandbox server
-  await worker.tearDown().catch((error) => {
-    console.log("Failed to stop the Sandbox:", error);
+  await t.context.worker.tearDown().catch((error) => {
+    console.log('Failed to stop the Sandbox:', error);
   });
 });
 
 test("send one message and retrieve it", async (t) => {
-  const { root, contract } = accounts;
+  const { root, contract } = t.context.accounts;
   await root.call(contract, "add_message", { text: "aloha" });
   const msgs = await contract.view("get_messages");
   const expectedMessagesResult = [
@@ -48,7 +45,7 @@ test("send one message and retrieve it", async (t) => {
 });
 
 test("send two messages and expect two total", async (t) => {
-  const { root, contract, alice } = accounts;
+  const { root, contract, alice } = t.context.accounts;
   await root.call(contract, "add_message", { text: "aloha" });
   await alice.call(contract, "add_message", { text: "hola" }, { attachedDeposit: NEAR.parse('1') });
   
