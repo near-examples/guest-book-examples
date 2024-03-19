@@ -1,4 +1,3 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 
 export default function Form({ onSubmit, currentAccountId }) {
@@ -37,8 +36,5 @@ export default function Form({ onSubmit, currentAccountId }) {
 
 Form.propTypes = {
   onSubmit: PropTypes.func.isRequired,
-  currentUser: PropTypes.shape({
-    accountId: PropTypes.string.isRequired,
-    balance: PropTypes.string.isRequired
-  })
+  currentAccountId: PropTypes.string.isRequired
 };

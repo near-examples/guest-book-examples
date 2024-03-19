@@ -11,27 +11,27 @@ html {
   --primary: #93b0df;
   --secondary: var(--royal);
   --tertiary: #FF585D;
-
   background-color: var(--bg);
   color: var(--fg);
-  font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
   font-size: calc(.65em + 0.7vw);
   line-height: 1.3;
+}
 
-  ::selection {
-    background: var(--secondary);
-    color: var(--bg);
-  }
+html::selection {
+  background: var(--secondary);
+  color: var(--bg);
+}
 
-  @media (prefers-color-scheme: dark) {
+@media (prefers-color-scheme: dark) {
+  html {
     --bg: #25282A;
     --fg: #fff;
     --secondary: var(--blue);
-
-    ::selection {
-      background: var(--secondary);
-      color: var(--fg);
-    }
+  }
+  html::selection {
+    background: var(--secondary);
+    color: var(--fg);
   }
 }
 
@@ -52,35 +52,44 @@ fieldset {
   display: flex;
   margin-bottom: 0.5em;
   width: 100%;
-  label {
-    margin-right: 0.5em;
-  }
-  input {
-    caret-color: var(--secondary);
-  }
+}
+
+.highlight label {
+  margin-right: 0.5em;
+}
+
+.highlight input {
+  caret-color: var(--secondary);
 }
 
 label {
   color: var(--gray);
 }
 
-button, .highlight {
+button,
+.highlight {
   border-radius: 5px;
   border-color: var(--primary);
   border: 0.1em solid var(--primary);
   padding: 0.5em 1em;
+}
 
-  &:hover, &:focus, &:focus-within {
-    border-color: var(--secondary);
-  }
+button:hover,
+button:focus,
+button:focus-within,
+.highlight:hover,
+.highlight:focus,
+.highlight:focus-within {
+  border-color: var(--secondary);
 }
 
 input {
   border: none;
   flex: 1;
-  &:read-only {
-    color: var(--primary)
-  }
+}
+
+input:read-only {
+  color: var(--primary);
 }
 
 input[type="number"] {
@@ -89,12 +98,15 @@ input[type="number"] {
   margin: 0 1em;
   width: 4em;
   padding-left: 0.5em;
-  &:hover, &:focus {
-    border-color: var(--secondary);
-  }
 }
 
-button, input {
+input[type="number"]:hover,
+input[type="number"]:focus {
+  border-color: var(--secondary);
+}
+
+button,
+input {
   background: transparent;
   color: inherit;
   cursor: pointer;
@@ -105,16 +117,18 @@ button, input {
 button {
   position: relative;
   transition: top 50ms;
-  &:hover, &:focus {
-    top: -1px;
-  }
   background: var(--primary);
+}
 
-  &:active {
-    background: var(--secondary);
-    border-color: var(--secondary);
-    top: 1px;
-  }
+button:hover,
+button:focus {
+  top: -1px;
+}
+
+button:active {
+  background: var(--secondary);
+  border-color: var(--secondary);
+  top: 1px;
 }
 
 .is-premium {
@@ -123,6 +137,6 @@ button {
   margin-left: -0.5em;
 }
 
-table button{
+table button {
   margin-left: 1rem;
 }
