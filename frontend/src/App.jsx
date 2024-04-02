@@ -25,7 +25,8 @@ function App() {
 
   const getLast10Messages = async () => {
     const total_messages = await wallet.viewMethod({ contractId: CONTRACT_NAME, method: "total_messages" });
-    return wallet.viewMethod({ contractId: CONTRACT_NAME, method: "get_messages", args: { from_index: String(total_messages - 10), limit: "10" } });
+    const from_index = total_messages >= 10 ? total_messages - 10 : 0;
+    return wallet.viewMethod({ contractId: CONTRACT_NAME, method: "get_messages", args: { from_index: String(from_index), limit: "10" } });
   }
 
   const onSubmit = async (e) => {
