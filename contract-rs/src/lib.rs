@@ -1,15 +1,11 @@
 // Find all our documentation at https://docs.near.org
-use near_sdk::borsh::{BorshDeserialize, BorshSerialize};
 use near_sdk::json_types::U64;
-use near_sdk::serde::Serialize;
 use near_sdk::store::Vector;
-use near_sdk::{env, near_bindgen, AccountId, NearToken};
+use near_sdk::{env, near, AccountId, NearToken};
 
 const POINT_ONE: NearToken = NearToken::from_millinear(100);
 
-#[derive(BorshDeserialize, BorshSerialize, Serialize)]
-#[serde(crate = "near_sdk::serde")]
-#[borsh(crate = "near_sdk::borsh")]
+#[near(serializers = [borsh, json])]
 pub struct PostedMessage {
     pub premium: bool,
     pub sender: AccountId,
@@ -17,9 +13,7 @@ pub struct PostedMessage {
 }
 
 // Define the contract structure
-#[near_bindgen]
-#[derive(BorshDeserialize, BorshSerialize)]
-#[borsh(crate = "near_sdk::borsh")]
+#[near(contract_state)]
 pub struct Contract {
     messages: Vector<PostedMessage>,
 }
@@ -34,7 +28,7 @@ impl Default for Contract {
 }
 
 // Implement the contract structure
-#[near_bindgen]
+#[near]
 impl Contract {
     // Public Method - Adds a message to the vector
     #[payable]
