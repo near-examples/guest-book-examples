@@ -1,34 +1,36 @@
 {
-  "name": "g-frontend",
+  "name": "hello-near",
+  "version": "1.0.0",
   "private": true,
-  "version": "0.0.0",
-  "type": "module",
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
-    "start": "vite",
-    "build": "vite build",
-    "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
   },
   "dependencies": {
-    "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
-    "@near-wallet-selector/core": "^8.9.5",
-    "@near-wallet-selector/here-wallet": "^8.9.5",
-    "@near-wallet-selector/ledger": "^8.9.5",
-    "@near-wallet-selector/modal-ui": "^8.9.5",
-    "@near-wallet-selector/my-near-wallet": "^8.9.5",
+    "@near-wallet-selector/core": "^8.9.7",
+    "@near-wallet-selector/here-wallet": "^8.9.7",
+    "@near-wallet-selector/modal-ui": "^8.9.7",
+    "@near-wallet-selector/my-near-wallet": "^8.9.7",
+    "base64-js": "^1.5.1",
+    "ieee754": "^1.2.1",
     "near-api-js": "^3.0.4",
+    "near-social-vm": "github:gagdiez/VM" ,
+    "next": "14.2.0",
+    "pino-pretty": "^11.0.0",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-bootstrap": "^2.10.2",
+    "react-bootstrap-icons": "^1.11.4",
+    "react-dom": "^18.2.0",
+    "react-singleton-hook": "^4.0.1",
+    "zustand": "^4.5.2"
   },
   "devDependencies": {
-    "@types/react": "^18.2.64",
-    "@types/react-dom": "^18.2.21",
-    "@vitejs/plugin-react": "^4.2.1",
-    "eslint": "^8.57.0",
-    "eslint-plugin-react": "^7.34.0",
-    "eslint-plugin-react-hooks": "^4.6.0",
-    "eslint-plugin-react-refresh": "^0.4.5",
-    "vite": "^5.1.6",
-    "vite-plugin-node-polyfills": "^0.21.0"
+    "eslint": "^9.0",
+    "eslint-config-next": "14.2.0"
   }
 }
