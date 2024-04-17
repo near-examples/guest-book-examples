@@ -3,7 +3,7 @@ import { create as createStore } from 'zustand';
 
 import { Wallet } from '@/wallets/near-wallet';
 
-import { NetworkId, HelloNearContract } from '@/config';
+import { NetworkId, GuestbookNearContract } from '@/config';
 import { Navigation } from './components/Navigation';
 
 // Store to share wallet and signed account
@@ -20,7 +20,7 @@ export default function RootLayout({ children }) {
 
   useEffect(() => {
     // create wallet instance
-    const wallet = new Wallet({ createAccessKeyFor: HelloNearContract, networkId: NetworkId });
+    const wallet = new Wallet({ createAccessKeyFor: GuestbookNearContract, networkId: NetworkId });
     wallet.startUp(setSignedAccountId);
     setWallet(wallet);
     console.log("wallet created");
