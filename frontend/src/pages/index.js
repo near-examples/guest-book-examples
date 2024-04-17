@@ -6,8 +6,9 @@ import { useState } from 'react';
 import SignIn from '@/components/SignIn';
 import Form from '@/components/Form';
 import { utils } from 'near-api-js';
+import { GuestbookNearContract } from '@/config';
 
-const CONTRACT_NAME = "guestbook.near-examples.testnet"
+const CONTRACT_NAME = GuestbookNearContract
 
 
 export default function Home() {
