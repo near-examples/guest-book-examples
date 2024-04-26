@@ -1,5 +1,4 @@
 const contractPerNetwork = {
-	mainnet: "guestbook.near-examples.near",
 	testnet: "guestbook.near-examples.testnet",
 };
 
