@@ -7,7 +7,7 @@
 ![example workflow](https://github.com/near-examples/guest-book-examples/actions/workflows/tests-ts.yml/badge.svg)
 ![example workflow](https://github.com/near-examples/guest-book-examples/actions/workflows/tests-rs.yml/badge.svg)
 
-This repository contains example implementations of a Guest Book smart contract in both JavaScript and Rust, and an examples of a frontend interacting with a Guest Book smart contract. 
+This repository contains example implementations of a Guest Book smart contract in both JavaScript and Rust, and an examples of a frontend interacting with a deployed Guest Book contract 
 
 ## Repositories
 
