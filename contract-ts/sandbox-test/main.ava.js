@@ -1,9 +1,12 @@
-import { Worker, NEAR, NearAccount } from 'near-workspaces';
-import anyTest, { TestFn } from 'ava';
+import anyTest from 'ava';
+import { Worker, NEAR } from 'near-workspaces';
 import { setDefaultResultOrder } from 'dns'; setDefaultResultOrder('ipv4first'); // temp fix for node >v17
 
-// Global context
-const test = anyTest as TestFn<{ worker: Worker, accounts: Record<string, NearAccount> }>;
+/**
+ *  @typedef {import('near-workspaces').NearAccount} NearAccount
+ *  @type {import('ava').TestFn<{worker: Worker, accounts: Record<string, NearAccount>}>}
+ */
+const test = anyTest;
 
 test.beforeEach(async (t) => {
   // Create sandbox, accounts, deploy contracts, etc.
@@ -48,7 +51,7 @@ test("send two messages and expect two total", async (t) => {
   const { root, contract, alice } = t.context.accounts;
   await root.call(contract, "add_message", { text: "aloha" });
   await alice.call(contract, "add_message", { text: "hola" }, { attachedDeposit: NEAR.parse('1') });
-  
+
   const total_messages = await contract.view("total_messages");
   t.is(total_messages, 2);
 
