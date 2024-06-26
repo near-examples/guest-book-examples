@@ -13,7 +13,7 @@ This repository contains example implementations of a Guest Book smart contract 
 
 - [Guest Book TS Example](contract-ts)
 - [Guest Book RS Example](contract-rs)
-- [Guest Book Frontend Example](Frontend)
+- [Guest Book Frontend Example](frontend)
 
 <br />
 
