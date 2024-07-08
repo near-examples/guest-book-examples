@@ -1,5 +1,5 @@
 const contractPerNetwork = {
-	testnet: "guestbook.near-examples.testnet",
+  testnet: "guestbook.near-examples.testnet",
 };
 
 export const NetworkId = "testnet";
