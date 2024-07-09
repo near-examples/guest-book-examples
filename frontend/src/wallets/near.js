@@ -137,7 +137,7 @@ export class Wallet {
   };
 
   /**
-   * Makes a call to a contract
+   * Fetches transaction result from the network
    * @param {string} txhash - the transaction hash
    * @returns {Promise<JSON.value>} - the result of the transaction
    */
