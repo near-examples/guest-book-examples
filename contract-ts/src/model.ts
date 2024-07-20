@@ -1,3 +1,5 @@
+import * as borsh from 'borsh';
+
 export const POINT_ONE = '100000000000000000000000';
 
 export class PostedMessage {
@@ -11,3 +13,11 @@ export class PostedMessage {
     this.text = text;
   }
 }
+
+export const MessageSchema: borsh.Schema = {
+  struct: {
+    premium: 'bool',
+    sender: 'string',
+    text: 'string',
+  },
+};
