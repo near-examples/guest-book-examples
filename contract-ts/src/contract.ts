@@ -1,4 +1,4 @@
-import { NearBindgen, near, call, view } from 'near-sdk-js';
+import { NearBindgen, near, call, view, Vector } from 'near-sdk-js';
 import { MessageSchema, POINT_ONE, PostedMessage } from './model';
 import * as borsh from 'borsh';
 
@@ -11,7 +11,7 @@ import * as borsh from 'borsh';
   },
 })
 class GuestBook {
-  messages: Array<PostedMessage> = [];
+  messages: Vector<PostedMessage> = new Vector<PostedMessage>('v-uid');
 
   @call({ payableFunction: true })
   // Public - Adds a new message.
@@ -21,13 +21,19 @@ class GuestBook {
     const sender = near.predecessorAccountId();
 
     const message: PostedMessage = { premium, sender, text };
-    this.messages.push(message);
+    this.messages.push(message, {
+      serializer: (value) => borsh.serialize(MessageSchema, value),
+    });
   }
 
   @view({})
   // Returns an array of messages.
   get_messages({ from_index = 0, limit = 10 }: { from_index: number, limit: number }): PostedMessage[] {
-    return this.messages.slice(from_index, from_index + limit);
+    return this.messages
+      .toArray({
+        deserializer: (value) => borsh.deserialize(MessageSchema, value),
+      })
+      .slice(from_index, from_index + limit);
   }
 
   @view({})
@@ -36,9 +42,11 @@ class GuestBook {
 
 const schema: borsh.Schema = {
   struct: {
+    // Vector's internal info
     messages: {
-      array: {
-        type: MessageSchema,
+      struct: {
+        prefix: 'string',
+        length: 'u32',
       },
     },
   },
