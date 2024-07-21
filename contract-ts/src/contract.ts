@@ -22,7 +22,7 @@ class GuestBook {
 
     const message: PostedMessage = { premium, sender, text };
     this.messages.push(message, {
-      serializer: (value) => borsh.serialize(MessageSchema, value),
+      serializer: messageSerializer
     });
   }
 
@@ -31,7 +31,7 @@ class GuestBook {
   get_messages({ from_index = 0, limit = 10 }: { from_index: number, limit: number }): PostedMessage[] {
     return this.messages
       .toArray({
-        deserializer: (value) => borsh.deserialize(MessageSchema, value),
+        deserializer: messageDeserializer
       })
       .slice(from_index, from_index + limit);
   }
@@ -39,6 +39,14 @@ class GuestBook {
   @view({})
   total_messages(): number { return this.messages.length }
 }
+
+function messageSerializer(value) {
+  return borsh.serialize(MessageSchema, value);
+}
+
+function messageDeserializer(value) {
+  return borsh.deserialize(MessageSchema, value);
+} 
 
 const schema: borsh.Schema = {
   struct: {
