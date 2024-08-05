@@ -6,7 +6,7 @@ class GuestBook {
   messages: Vector<PostedMessage> = new Vector<PostedMessage>("v-uid");
 
   static schema = {
-    'messages': Vector<PostedMessage>
+    'messages': { class: Vector, value: PostedMessage }
   }
 
   @call({ payableFunction: true })
@@ -16,7 +16,7 @@ class GuestBook {
     const premium = near.attachedDeposit() >= BigInt(POINT_ONE);
     const sender = near.predecessorAccountId();
 
-    const message: PostedMessage = { premium, sender, text };
+    const message = new PostedMessage(premium, sender, text);
     this.messages.push(message);
   }
 
