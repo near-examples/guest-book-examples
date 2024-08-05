@@ -5,6 +5,10 @@ import { POINT_ONE, PostedMessage } from './model'
 class GuestBook {
   messages: Vector<PostedMessage> = new Vector<PostedMessage>("v-uid");
 
+  static schema = {
+    'messages': Vector<PostedMessage>
+  }
+
   @call({ payableFunction: true })
   // Public - Adds a new message.
   add_message({ text }: { text: string }) {
