@@ -1,5 +1,6 @@
-use near_sdk::{serde::Deserialize, AccountId, NearToken};
+use near_sdk::near;
 use serde_json::json;
+use near_workspaces::types::{NearToken, AccountId};
 
 #[tokio::test]
 async fn test_guestbook_contract() -> Result<(), Box<dyn std::error::Error>> {
@@ -29,8 +30,8 @@ async fn test_guestbook_contract() -> Result<(), Box<dyn std::error::Error>> {
 
     assert!(bob_outcome.is_success());
 
-    #[derive(Debug, PartialEq, Deserialize)]
-    #[serde(crate = "near_sdk::serde")]
+    #[derive(Debug, PartialEq)]
+    #[near(serializers = [json])]
     struct PostedMessage {
          premium: bool,
          sender: AccountId,
