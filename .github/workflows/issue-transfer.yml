@@ -1,4 +1,4 @@
-name: 'Add to Project'
+name: 'Add to DevRel Project'
 
 on:
   issues:
@@ -15,7 +15,7 @@ jobs:
     name: Add issue/PR to project
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/add-to-project@v0.5.0
+      - uses: actions/add-to-project@v1.0.0
         with:
           # add to DevRel Project #117
           project-url: https://github.com/orgs/near/projects/117
