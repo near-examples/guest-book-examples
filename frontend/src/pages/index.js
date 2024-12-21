@@ -36,20 +36,20 @@ export default function Home() {
     const { fieldset, message, donation } = e.target.elements;
 
     fieldset.disabled = true;
-
+    
     // Add message to the guest book
     const deposit = utils.format.parseNearAmount(donation.value);
-    await wallet.callMethod({
+    wallet.callMethod({
       contractId: GuestbookNearContract,
       method: "add_message",
       args: { text: message.value },
       deposit,
+    }).catch(()=>{
+      setMessages(messages.slice(1));
     });
 
-    // Get updated messages
-    const messages = await getLast10Messages();
-    setMessages(messages.reverse());
-
+    await new Promise(resolve => setTimeout(resolve, 300));
+    setMessages([{ sender: signedAccountId, text: message.value, premium: donation.value >= 1 }, ...messages]);  
     message.value = "";
     donation.value = "0";
     fieldset.disabled = false;
