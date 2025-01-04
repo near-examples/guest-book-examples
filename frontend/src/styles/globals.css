@@ -115,3 +115,14 @@ a {
     color-scheme: dark;
   }
 }
+
+.fade-animation .card {
+  transition: all 0.4s ease-out;
+  opacity: 0;
+  background-color: #ffebae
+}
+
+.fade-animation .card.show {
+  opacity: 1;
+  background-color: #fff;
+}
