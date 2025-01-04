@@ -8,13 +8,13 @@ import { Wallet } from "@/wallets/near";
 import { NetworkId, GuestbookNearContract } from "@/config";
 
 // Wallet instance
-const wallet = new Wallet({ networkId: NetworkId });
+// const wallet = new Wallet({ networkId: NetworkId });
 
 // Optional: Create an access key so the user does not need to sign transactions. Read more about access keys here: https://docs.near.org/concepts/protocol/access-keys
-// const wallet = new Wallet({
-//   createAccessKeyFor: GuestbookNearContract,
-//   networkId: NetworkId,
-// });
+const wallet = new Wallet({
+  createAccessKeyFor: GuestbookNearContract,
+  networkId: NetworkId,
+});
 
 export default function MyApp({ Component, pageProps }) {
   const [signedAccountId, setSignedAccountId] = useState("");
