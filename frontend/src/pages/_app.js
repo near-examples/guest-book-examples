@@ -15,14 +15,14 @@ import { setupWelldoneWallet } from '@near-wallet-selector/welldone-wallet';
 import { GuestbookNearContract, NetworkId } from '@/config';
 import { WalletSelectorProvider } from '@near-wallet-selector/react-hook';
 import { Navigation } from '@/components/Navigation';
-import { wagmiConfig, web3Modal } from '@/wallets/web3modal';
+import { wagmiAdapter, web3Modal } from '@/wallets/web3modal';
 
  
 const walletSelectorConfig = {
   network: NetworkId,
   createAccessKeyFor: GuestbookNearContract,
   modules: [
-    setupEthereumWallets({ wagmiConfig, web3Modal, alwaysOnboardDuringSignIn: true }),
+    setupEthereumWallets({ wagmiConfig: wagmiAdapter.wagmiConfig, web3Modal }),
     setupBitteWallet(),
     setupMeteorWallet(),
     setupMeteorWalletApp({contractId: GuestbookNearContract}),
