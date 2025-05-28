@@ -8,7 +8,7 @@ import styles from "@/styles/app.module.css";
 
 import { GuestbookNearContract } from "@/config";
 import { useWalletSelector } from '@near-wallet-selector/react-hook';
-
+import { contracts } from "chainsig.js";
 
 export default function Home() {
   const { signedAccountId, viewFunction, callFunction } = useWalletSelector();
