@@ -42,6 +42,7 @@ export const web3Modal = createAppKit({
     socials: false, // Smart accounts (Safe contract) not available on NEAR Protocol, only EOA.
   },
   coinbasePreference: "eoaOnly", // Smart accounts (Safe contract) not available on NEAR Protocol, only EOA.
+  allWallets: "SHOW",
 });
 
 // force reconnecting if the user has already signed in with an ethereum wallet
