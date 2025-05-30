@@ -42,4 +42,12 @@ export const web3Modal = createAppKit({
     socials: false, // Smart accounts (Safe contract) not available on NEAR Protocol, only EOA.
   },
   coinbasePreference: "eoaOnly", // Smart accounts (Safe contract) not available on NEAR Protocol, only EOA.
+  allWallets: "SHOW",
 });
+
+// force reconnecting if the user has already signed in with an ethereum wallet
+// this is a workaround until `ethereum-wallets` supports the `reconnect` method
+if (typeof window !== "undefined") {
+  const recentWallets = localStorage.getItem("near-wallet-selector:recentlySignedInWallets");
+  recentWallets && recentWallets.includes("ethereum-wallets") && reconnect(wagmiAdapter.wagmiConfig)
+} 
