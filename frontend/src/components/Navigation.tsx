@@ -1,24 +1,24 @@
-import Image from "next/image";
-import Link from "next/link";
-import { useEffect, useState } from "react";
-import NearLogo from "/public/near-logo.svg";
+import Image from 'next/image';
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
 import { useWalletSelector } from '@near-wallet-selector/react-hook';
 
+
 export const Navigation = () => {
+  // Type the action as a function that returns void
+  const [action, setAction] = useState<() => void>(() => () => {});
+  const [label, setLabel] = useState<string>('Loading...');
   const { signedAccountId, signIn, signOut } = useWalletSelector();
-  const [action, setAction] = useState(() => {});
-  const [label, setLabel] = useState("Loading...");
 
   useEffect(() => {
-
     if (signedAccountId) {
       setAction(() => signOut);
       setLabel(`Logout ${signedAccountId}`);
     } else {
       setAction(() => signIn);
-      setLabel("Login");
+      setLabel('Login');
     }
-  }, [signedAccountId]);
+  }, [signedAccountId, signIn, signOut]);
 
   return (
     <nav className="navbar navbar-expand-lg">
@@ -26,17 +26,16 @@ export const Navigation = () => {
         <Link href="/" passHref legacyBehavior>
           <Image
             priority
-            src={NearLogo}
+            src="/near-logo.svg" // just reference the public path
             alt="NEAR"
-            width="30"
-            height="24"
+            width={30}
+            height={24}
             className="d-inline-block align-text-top"
           />
         </Link>
         <div className="navbar-nav pt-1">
           <button className="btn btn-secondary" onClick={action}>
-            {" "}
-            {label}{" "}
+            {label}
           </button>
         </div>
       </div>

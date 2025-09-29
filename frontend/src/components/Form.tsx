@@ -1,9 +1,17 @@
-export default function Form({ onSubmit, currentAccountId }) {
+import { FormEvent } from "react";
+
+type FormProps = {
+  onSubmit: (e: FormEvent<HTMLFormElement>) => void;
+  currentAccountId: string | null;
+};
+
+export default function Form({ onSubmit, currentAccountId }: FormProps) {
   return (
     <form onSubmit={onSubmit} className="p-4 border rounded shadow-sm">
       <fieldset id="fieldset">
         <h2 className="mb-4">Guest Book</h2>
-        <p>Sign the guest book, {currentAccountId}!</p>
+        <p>Sign the guest book{currentAccountId ? `, ${currentAccountId}` : ""}!</p>
+
         <div className="mb-3">
           <label htmlFor="message" className="form-label">
             Message:
@@ -16,6 +24,7 @@ export default function Form({ onSubmit, currentAccountId }) {
             required
           />
         </div>
+
         <div className="mb-3">
           <label htmlFor="donation" className="form-label">
             Donation (optional):
@@ -23,7 +32,7 @@ export default function Form({ onSubmit, currentAccountId }) {
           <div className="input-group">
             <input
               autoComplete="off"
-              defaultValue={"0"}
+              defaultValue="0"
               id="donation"
               min="0"
               step="0.01"
@@ -35,6 +44,7 @@ export default function Form({ onSubmit, currentAccountId }) {
             </span>
           </div>
         </div>
+
         <button type="submit" className="btn btn-primary w-100">
           Sign Guest Book
         </button>
