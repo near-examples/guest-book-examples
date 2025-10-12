@@ -3,4 +3,4 @@ declare module '*.module.css' {
   export default classes;
 }
 
-declare module '*.css'; // optional: for normal CSS imports
+declare module '*.css'; 

@@ -7,7 +7,7 @@ import Messages from "@/components/Messages";
 import styles from "@/styles/app.module.css";
 
 import { GuestbookNearContract } from "@/config";
-import { useWalletSelector } from "@near-wallet-selector/react-hook";
+import { useNear } from "@/hooks/useNear";
 
 type GuestbookMessage = {
   sender: string | null;
@@ -16,7 +16,7 @@ type GuestbookMessage = {
 };
 
 export default function Home() {
-  const { signedAccountId, viewFunction, callFunction } = useWalletSelector();
+  const { signedAccountId, viewFunction, callFunction } = useNear();
   const [messages, setMessages] = useState<GuestbookMessage[]>([]);
 
   useEffect(() => {
