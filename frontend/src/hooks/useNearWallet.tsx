@@ -380,7 +380,8 @@ export const AccessKeyPlugin = (config: AccessKeyConfig): Plugin => {
       // Check if this transaction can use the access key
       if (shouldUseAccessKey(tx)) {
         console.log("[AccessKeyPlugin] 🔑 Using local access key to sign transaction");
-
+        console.log(tx);
+        
         try {
           const outcome = await signTransactionLocally(tx, tx.network);
           console.log("[AccessKeyPlugin] ✅ Transaction signed locally");
