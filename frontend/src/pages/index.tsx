@@ -7,7 +7,7 @@ import Messages from "@/components/Messages";
 import styles from "@/styles/app.module.css";
 
 import { GuestbookNearContract } from "@/config";
-import { useNear } from "@/hooks/useNear";
+import { useNearWallet } from "@/hooks/useNearWallet";
 
 type GuestbookMessage = {
   sender: string | null;
@@ -16,7 +16,7 @@ type GuestbookMessage = {
 };
 
 export default function Home() {
-  const { signedAccountId, viewFunction, callFunction } = useNear();
+  const { signedAccountId, viewFunction, callFunction } = useNearWallet();
   const [messages, setMessages] = useState<GuestbookMessage[]>([]);
 
   useEffect(() => {
@@ -52,7 +52,7 @@ export default function Home() {
     const { fieldset, message, donation } = target;
     fieldset.disabled = true;
 
-    const deposit = utils.format.parseNearAmount(donation.value) || undefined;
+    const deposit = utils.format.parseNearAmount(donation.value) || "0";
 
     callFunction({
       contractId: GuestbookNearContract,
