@@ -26,6 +26,7 @@ testresult = "0.4.1"
 # This is temporary fix for the build error since those crates with a higher version require a higher version of Rust compiler (1.88.0)
 cargo-platform = "=0.3.1"
 darling = "=0.20.11"
+bon = "=3.8.1"
 time = "=0.3.44"
 time-core = "=0.1.6"
 
