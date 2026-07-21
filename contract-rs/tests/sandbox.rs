@@ -19,7 +19,7 @@ async fn test_guestbook_contract() -> Result<(), Box<dyn std::error::Error>> {
         .transact()
         .await?;
 
-    assert!(alice_outcome.is_success());
+    assert!(alice_outcome.is_success(), "{:#?}", alice_outcome.outcomes());
 
     let bob_outcome = bob_account
         .call(contract.id(), "add_message")
@@ -28,7 +28,7 @@ async fn test_guestbook_contract() -> Result<(), Box<dyn std::error::Error>> {
         .transact()
         .await?;
 
-    assert!(bob_outcome.is_success());
+    assert!(bob_outcome.is_success(), "{:#?}", bob_outcome.outcomes());
 
     #[derive(Debug, PartialEq)]
     #[near(serializers = [json])]
