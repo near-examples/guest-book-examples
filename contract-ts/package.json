@@ -19,5 +19,8 @@
   "ava": {
     "timeout": "60000",
     "files": ["sandbox-test/*.ava.js"]
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": ["near-sdk-js", "near-sandbox"]
   }
 }
