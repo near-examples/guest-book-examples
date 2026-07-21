@@ -1,4 +1,4 @@
-import { utils } from "near-api-js";
+import { nearToYocto } from "near-api-js";
 import { useState, useEffect } from "react";
 
 import Form from "@/components/Form";
@@ -7,11 +7,11 @@ import Messages from "@/components/Messages";
 import styles from "@/styles/app.module.css";
 
 import { GuestbookNearContract } from "@/config";
-import { useWalletSelector } from '@near-wallet-selector/react-hook';
+import { useNearWallet } from 'near-connect-hooks';
 
 
 export default function Home() {
-  const { signedAccountId, viewFunction, callFunction } = useWalletSelector();
+  const { signedAccountId, viewFunction, callFunction } = useNearWallet();
   const [messages, setMessages] = useState([]);
 
   useEffect(() => {
@@ -38,21 +38,24 @@ export default function Home() {
 
     fieldset.disabled = true;
 
-    // Add message to the guest book
-    const deposit = utils.format.parseNearAmount(donation.value);
-    callFunction({
-      contractId: GuestbookNearContract,
-      method: "add_message",
-      args: { text: message.value },
-      deposit,
-    }).catch(() => {
-      // rollback to the current messages
-      setMessages(messages);
-    });
-
-    await new Promise(resolve => setTimeout(resolve, 300));
-    fieldset.disabled = false;
+    // Optimistically add the message, roll back if the transaction fails
+    const previousMessages = messages;
     setMessages([{ sender: signedAccountId, text: message.value, premium: donation.value >= 1 }, ...messages]);
+
+    const deposit = nearToYocto(donation.value).toString();
+    try {
+      await callFunction({
+        contractId: GuestbookNearContract,
+        method: "add_message",
+        args: { text: message.value },
+        deposit,
+      });
+    } catch (error) {
+      setMessages(previousMessages);
+      alert(`Failed to sign the guest book: ${error.message || error}`);
+    } finally {
+      fieldset.disabled = false;
+    }
   };
 
   return (
