@@ -1,5 +1,5 @@
 import anyTest from 'ava';
-import { Worker, NEAR } from 'near-workspaces';
+import { Worker, parseNEAR } from 'near-workspaces';
 import { setDefaultResultOrder } from 'dns'; setDefaultResultOrder('ipv4first'); // temp fix for node >v17
 
 /**
@@ -17,10 +17,10 @@ test.beforeEach(async (t) => {
 
   // some test accounts
   const alice = await root.createSubAccount("alice", {
-    initialBalance: NEAR.parse("30 N").toJSON(),
+    initialBalance: parseNEAR("30"),
   });
   const contract = await root.createSubAccount("contract", {
-    initialBalance: NEAR.parse("30 N").toJSON(),
+    initialBalance: parseNEAR("30"),
   });
 
   // Get wasm file path from package.json test script in folder above
@@ -50,7 +50,7 @@ test("send one message and retrieve it", async (t) => {
 test("send two messages and expect two total", async (t) => {
   const { root, contract, alice } = t.context.accounts;
   await root.call(contract, "add_message", { text: "aloha" });
-  await alice.call(contract, "add_message", { text: "hola" }, { attachedDeposit: NEAR.parse('1') });
+  await alice.call(contract, "add_message", { text: "hola" }, { attachedDeposit: parseNEAR('1') });
 
   const total_messages = await contract.view("total_messages");
   t.is(total_messages, 2);

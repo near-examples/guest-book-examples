@@ -11,9 +11,9 @@
     "near-sdk-js": "2.0.0"
   },
   "devDependencies": {
-    "ava": "^6.1.3",
-    "near-workspaces": "^3.5.0",
-    "typescript": "^5.4.5"
+    "ava": "^8.0.1",
+    "near-workspaces": "^5.0.0",
+    "typescript": "^5.9.3"
   },
   "ava": {
     "timeout": "20000",
