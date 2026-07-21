@@ -1,29 +1,35 @@
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import NearLogo from "/public/near-logo.svg";
-import { useWalletSelector } from '@near-wallet-selector/react-hook';
+import NearLogo from "../../public/near-logo.svg";
+import { useNearWallet } from "near-connect-hooks";
+import { GuestbookNearContract } from "@/config";
 
 export const Navigation = () => {
-  const { signedAccountId, signIn, signOut } = useWalletSelector();
-  const [action, setAction] = useState(() => {});
-  const [label, setLabel] = useState("Loading...");
+  const { signedAccountId, loading, signIn, signOut } = useNearWallet();
 
-  useEffect(() => {
-
+  const handleAction = () => {
     if (signedAccountId) {
-      setAction(() => signOut);
-      setLabel(`Logout ${signedAccountId}`);
+      signOut();
     } else {
-      setAction(() => signIn);
-      setLabel("Login");
+      signIn({
+        addFunctionCallKey: {
+          contractId: GuestbookNearContract,
+          allowMethods: { anyMethod: false, methodNames: ["add_message"] },
+        },
+      });
     }
-  }, [signedAccountId]);
+  };
+
+  const label = loading
+    ? "Loading..."
+    : signedAccountId
+      ? `Logout ${signedAccountId}`
+      : "Login";
 
   return (
     <nav className="navbar navbar-expand-lg">
       <div className="container-fluid">
-        <Link href="/" passHref legacyBehavior>
+        <Link href="/">
           <Image
             priority
             src={NearLogo}
@@ -34,9 +40,8 @@ export const Navigation = () => {
           />
         </Link>
         <div className="navbar-nav pt-1">
-          <button className="btn btn-secondary" onClick={action}>
-            {" "}
-            {label}{" "}
+          <button className="btn btn-secondary" onClick={handleAction}>
+            {label}
           </button>
         </div>
       </div>

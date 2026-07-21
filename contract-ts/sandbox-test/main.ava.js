@@ -1,46 +1,66 @@
 import anyTest from 'ava';
-import { Worker, NEAR } from 'near-workspaces';
-import { setDefaultResultOrder } from 'dns'; setDefaultResultOrder('ipv4first'); // temp fix for node >v17
+import { readFileSync } from 'fs';
+import { Sandbox, DEFAULT_ACCOUNT_ID, DEFAULT_PRIVATE_KEY } from 'near-sandbox';
+import { Account, JsonRpcProvider, KeyPair, KeyPairSigner, nearToYocto } from 'near-api-js';
 
 /**
- *  @typedef {import('near-workspaces').NearAccount} NearAccount
- *  @type {import('ava').TestFn<{worker: Worker, accounts: Record<string, NearAccount>}>}
+ *  @type {import('ava').TestFn<{sandbox: import('near-sandbox').Sandbox, provider: JsonRpcProvider, root: Account, alice: Account, contract: Account}>}
  */
 const test = anyTest;
 
 test.beforeEach(async (t) => {
-  // Create sandbox, accounts, deploy contracts, etc.
-  const worker = t.context.worker = await Worker.init();
+  // Start a fresh sandbox for each test
+  const sandbox = await Sandbox.start({});
+  const provider = new JsonRpcProvider({ url: sandbox.rpcUrl });
 
-  // deploy contract
-  const root = worker.rootAccount;
+  // All accounts share the sandbox genesis key for simplicity
+  const keyPair = KeyPair.fromString(DEFAULT_PRIVATE_KEY);
+  const signer = new KeyPairSigner(keyPair);
+
+  const root = new Account(DEFAULT_ACCOUNT_ID, provider, signer);
 
   // some test accounts
-  const alice = await root.createSubAccount("alice", {
-    initialBalance: NEAR.parse("30 N").toJSON(),
+  await root.createSubAccount({
+    accountOrPrefix: 'alice',
+    publicKey: keyPair.getPublicKey(),
+    nearToTransfer: nearToYocto('30'),
   });
-  const contract = await root.createSubAccount("contract", {
-    initialBalance: NEAR.parse("30 N").toJSON(),
+  await root.createSubAccount({
+    accountOrPrefix: 'contract',
+    publicKey: keyPair.getPublicKey(),
+    nearToTransfer: nearToYocto('30'),
   });
 
-  // Get wasm file path from package.json test script in folder above
-  await contract.deploy(process.argv[2]);
+  const alice = new Account(`alice.${DEFAULT_ACCOUNT_ID}`, provider, signer);
+  const contract = new Account(`contract.${DEFAULT_ACCOUNT_ID}`, provider, signer);
+
+  // Deploy the wasm file passed by the package.json test script
+  await contract.deployContract(readFileSync(process.argv[2]));
 
   // Save state for test runs, it is unique for each test
-  t.context.accounts = { root, contract, alice };
+  t.context = { sandbox, provider, root, alice, contract };
 });
 
 test.afterEach.always(async (t) => {
-  // Stop Sandbox server
-  await t.context.worker.tearDown().catch((error) => {
+  // Stop the sandbox and clean up temporary files
+  await t.context.sandbox.tearDown().catch((error) => {
     console.log('Failed to stop the Sandbox:', error);
   });
 });
 
 test("send one message and retrieve it", async (t) => {
-  const { root, contract } = t.context.accounts;
-  await root.call(contract, "add_message", { text: "aloha" });
-  const msgs = await contract.view("get_messages");
+  const { provider, root, contract } = t.context;
+  await root.callFunction({
+    contractId: contract.accountId,
+    methodName: "add_message",
+    args: { text: "aloha" },
+  });
+
+  const msgs = await provider.callFunction({
+    contractId: contract.accountId,
+    method: "get_messages",
+    args: {},
+  });
   const expectedMessagesResult = [
     { premium: false, sender: root.accountId, text: "aloha" },
   ];
@@ -48,14 +68,31 @@ test("send one message and retrieve it", async (t) => {
 });
 
 test("send two messages and expect two total", async (t) => {
-  const { root, contract, alice } = t.context.accounts;
-  await root.call(contract, "add_message", { text: "aloha" });
-  await alice.call(contract, "add_message", { text: "hola" }, { attachedDeposit: NEAR.parse('1') });
+  const { provider, root, contract, alice } = t.context;
+  await root.callFunction({
+    contractId: contract.accountId,
+    methodName: "add_message",
+    args: { text: "aloha" },
+  });
+  await alice.callFunction({
+    contractId: contract.accountId,
+    methodName: "add_message",
+    args: { text: "hola" },
+    deposit: nearToYocto("1"),
+  });
 
-  const total_messages = await contract.view("total_messages");
+  const total_messages = await provider.callFunction({
+    contractId: contract.accountId,
+    method: "total_messages",
+    args: {},
+  });
   t.is(total_messages, 2);
 
-  const msgs = await contract.view("get_messages");
+  const msgs = await provider.callFunction({
+    contractId: contract.accountId,
+    method: "get_messages",
+    args: {},
+  });
   const expected = [
     { premium: false, sender: root.accountId, text: "aloha" },
     { premium: true, sender: alice.accountId, text: "hola" },

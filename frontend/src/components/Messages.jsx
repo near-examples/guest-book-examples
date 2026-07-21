@@ -27,7 +27,7 @@ export default function Messages({ messages }) {
   return (
     <div className="container fade-animation">
       <h2 className="my-4">Messages</h2>
-      {messages.map((message, i) => <Message key={`${message.sender}-${message.text}`} {...message} />)}
+      {messages.map((message, i) => <Message key={`${message.sender}-${message.text}-${i}`} {...message} />)}
     </div>
   );
 }
