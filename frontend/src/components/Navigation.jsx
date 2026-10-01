@@ -1,8 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import NearLogo from "../../public/near-logo.svg";
-import { useNearWallet } from "near-connect-hooks";
-import { GuestbookNearContract } from "@/config";
+import { useNearWallet } from "@/components/near-provider";
 
 export const Navigation = () => {
   const { signedAccountId, loading, signIn, signOut } = useNearWallet();
@@ -11,12 +10,7 @@ export const Navigation = () => {
     if (signedAccountId) {
       signOut();
     } else {
-      signIn({
-        addFunctionCallKey: {
-          contractId: GuestbookNearContract,
-          allowMethods: { anyMethod: false, methodNames: ["add_message"] },
-        },
-      });
+      signIn();
     }
   };
 

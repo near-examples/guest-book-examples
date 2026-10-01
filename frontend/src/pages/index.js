@@ -7,7 +7,7 @@ import Messages from "@/components/Messages";
 import styles from "@/styles/app.module.css";
 
 import { GuestbookNearContract } from "@/config";
-import { useNearWallet } from 'near-connect-hooks';
+import { useNearWallet } from "@/components/near-provider";
 
 
 export default function Home() {
