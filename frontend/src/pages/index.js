@@ -1,5 +1,5 @@
 import { nearToYocto } from "near-api-js";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 import Form from "@/components/Form";
 import SignIn from "@/components/SignIn";
@@ -14,11 +14,7 @@ export default function Home() {
   const { signedAccountId, viewFunction, callFunction } = useNearWallet();
   const [messages, setMessages] = useState([]);
 
-  useEffect(() => {
-    getLast10Messages().then((messages) => setMessages(messages.reverse()));
-  }, []);
-
-  const getLast10Messages = async () => {
+  const getLast10Messages = useCallback(async () => {
     const total_messages = await viewFunction({
       contractId: GuestbookNearContract,
       method: "total_messages",
@@ -29,7 +25,15 @@ export default function Home() {
       method: "get_messages",
       args: { from_index: String(from_index), limit: "10" },
     });
-  };
+  }, [viewFunction]);
+
+  useEffect(() => {
+    let cancelled = false;
+    getLast10Messages().then((messages) => {
+      if (!cancelled) setMessages(messages.reverse());
+    });
+    return () => { cancelled = true; };
+  }, [getLast10Messages]);
 
   const onSubmit = async (e) => {
     e.preventDefault();

@@ -110,7 +110,7 @@ export function NearProvider({ children }) {
     setWallet(connectedWallet);
     const accounts = await connectedWallet.getAccounts();
     setSignedAccountId(accounts[0]?.accountId ?? '');
-  }, [accessKeyPlugin, connector]);
+  }, [connector]);
 
   const signOut = useCallback(async () => {
     if (!wallet) return;
