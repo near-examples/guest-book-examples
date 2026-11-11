@@ -1,6 +1,9 @@
 # Guest Book Contract
 
-This smart contract stores messages from users. If the user attaches more than 0.1 NEAR tokens the message is marked as premium.
+This smart contract stores messages from users. If the user attaches at least 0.1 NEAR tokens the message is marked as premium.
+
+> [!WARNING]
+> This example stores every message in the contract to show how contract state works. Production apps should not do this: contract storage requires staking NEAR, and the messages can be read back from the transactions that call `add_message` using an indexer. Learn more in [A contract is not a backend](https://docs.near.org/smart-contracts/what-is#a-contract-is-not-a-backend).
 
 ## How to Build Locally?
 
