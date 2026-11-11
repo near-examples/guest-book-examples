@@ -44,7 +44,7 @@ export default function Home() {
 
     // Optimistically add the message, roll back if the transaction fails
     const previousMessages = messages;
-    setMessages([{ sender: signedAccountId, text: message.value, premium: donation.value >= 1 }, ...messages]);
+    setMessages([{ sender: signedAccountId, text: message.value, premium: donation.value >= 0.1 }, ...messages]);
 
     const deposit = nearToYocto(donation.value).toString();
     try {

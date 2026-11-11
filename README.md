@@ -7,6 +7,9 @@
 
 This repository contains an example implementation of a Guest Book smart contract in Rust, and an example of a frontend interacting with a deployed Guest Book contract
 
+> [!WARNING]
+> This example stores every message in the contract to show how contract state works. Production apps should not do this: contract storage requires staking NEAR, and the messages can be read back from the transactions that call `add_message` using an indexer. Learn more in [A contract is not a backend](https://docs.near.org/smart-contracts/what-is#a-contract-is-not-a-backend).
+
 ## Repositories
 
 - [Guest Book RS Example](contract-rs)
